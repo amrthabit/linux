@@ -1,12 +1,13 @@
 #!/bin/bash
 
+# script must run as root
 if [ "$EUID" -ne 0 ]; then
   echo "This script must be run as root"
   exit 1
 fi
 
+# install packages if not present
 packages=("vim" "git" "sudo" "neofetch")
-
 for pkg in "${packages[@]}"; do
     if ! dpkg -l | grep -q "^ii  $pkg"; then
         echo "Installing $pkg..."
@@ -25,31 +26,22 @@ else
 fi
 
 # clone and set my linux configs
-copy_files() {
-    cat linux/root.bashrc > .bashrc
-    echo "/root/.bashrc updated"
-    cat linux/.bashrc > /home/amr/.bashrc
-    echo "/home/amr/.bashrc updated"
-    cat linux/.config/neofetch/config.conf > /home/amr/.config/neofetch/config.conf
-    echo "/home/amr/.config/neofetch/config.conf updated"
-    cat linux/.vimrc > .vimrc
-    echo "/root/.vimrc updated"
-    cat linux/.vimrc > /home/amr/.vimrc
-    echo "/home/amr/.vimrc updated"
-    chown amr:amr /home/amr/.bashrc /home/amr/.vimrc /home/amr/.config/neofetch/config.conf
-}
-
 cd /root
-
 if [ -d "linux" ]; then
     echo "linux configs exist. Checking for updates..."
-    if git -C linux pull | grep -q 'Already up to date'; then
-        echo "Already up to date, no changes pulled."
-    else
-        copy_files
-    fi
+    git -C linux pull
 else
     echo "linux configs not here. Cloning..."
     git clone https://github.com/amrthabit/linux.git
-    copy_files
 fi
+cat linux/root.bashrc > .bashrc
+echo "/root/.bashrc updated"
+cat linux/.bashrc > /home/amr/.bashrc
+echo "/home/amr/.bashrc updated"
+cat linux/.config/neofetch/config.conf > /home/amr/.config/neofetch/config.conf
+echo "/home/amr/.config/neofetch/config.conf updated"
+cat linux/.vimrc > .vimrc
+echo "/root/.vimrc updated"
+cat linux/.vimrc > /home/amr/.vimrc
+echo "/home/amr/.vimrc updated"
+chown amr:amr /home/amr/.bashrc /home/amr/.vimrc /home/amr/.config/neofetch/config.conf
