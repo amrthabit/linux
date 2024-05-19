@@ -36,6 +36,7 @@ copy_files() {
     echo "/root/.vimrc updated"
     cat linux/.vimrc > /home/amr/.vimrc
     echo "/home/amr/.vimrc updated"
+    chown amr:amr /home/amr/.bashrc /home/amr/.vimrc /home/amr/.config/neofetch/config.conf
 }
 
 cd /root
