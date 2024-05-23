@@ -59,8 +59,9 @@ cd /home/amr/linux
 git remote set-url origin git@github.com:amrthabit/linux.git
 
 # generate ssh keys
-rm -f ~/.ssh/id_ed25519 ~/.ssh/id_ed25519.pub
-ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
+if ! [ -e ~/.ssh/id_ed25519 ]; then
+    ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
+fi
 cat ~/.ssh/id_ed25519.pub
 
 EOF
